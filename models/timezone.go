@@ -10,10 +10,12 @@ type Timezone struct {
 	Time string
 }
 
-func GetSpecificTimeZone(location string) time.Time {
+var location string
+
+func (tz *Timezone) GetTimeOfZone(location string) time.Time {
 	// Check for three char
 	if len(location) != 3 {
-		fmt.Println("Yo! Just three characters G")
+		fmt.Println("Yo")
 	}
 
 	loc, _ := time.LoadLocation(location)
