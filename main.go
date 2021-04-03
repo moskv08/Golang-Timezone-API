@@ -1,17 +1,24 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"net/http"
 
-	"github.com/moskv08/go-timezone-rocket/models"
+	"github.com/gorilla/mux"
 )
 
 func main() {
 
-	fmt.Println("UTC:", models.GetSpecificTimeZone("UTC"))
-	fmt.Println("MST:", models.GetSpecificTimeZone("MST"))
-	fmt.Println("EST:", models.GetSpecificTimeZone("EST"))
+	// Init router
+	router := mux.NewRouter()
+	router.HandleFunc("/timezone", GetTimeByZone).Methods(http.MethodGet)
 
-	zone, time := models.GetMyTimeZone()
-	fmt.Println(zone, ":", time)
+	// Start webserver
+	log.Fatal(http.ListenAndServe(":3000", router))
+}
+
+func GetTimeByZone(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(`{"message": "get called"}`))
 }
