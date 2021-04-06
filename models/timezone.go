@@ -6,29 +6,33 @@ import (
 
 type Timezone struct {
 	Time string
+	UTC  string
 	Zone string
 }
 
 // Method
-func FindProperZone(zone string) Timezone {
+func (tz *Timezone) FindProperZone(zone string) Timezone {
 
-	if len(zone) > 4 {
-		//return "", "Provide proper format"
+	location, err := time.LoadLocation(zone)
+	if err != nil {
+		panic(err)
 	}
 
-	loc, _ := time.LoadLocation(zone)
-	time := time.Now().In(loc)
+	tz.UTC = time.Date(2018, 8, 30, 12, 0, 0, 0, time.UTC).String()
+	tz.Time = time.Now().In(location).String()
+	tz.Zone = location.String()
 
-	tz := Timezone{time.String(), loc.String()}
-
-	return tz
+	// tz := Timezone{time.String(), timeInUTC.String(), location.String()}
+	return *tz
 }
 
-func FindMyZone() Timezone {
+// Method
+func (tz *Timezone) FindMyZone() Timezone {
 	time := time.Now()
 	zone, _ := time.Zone()
 
-	tz := Timezone{time.String(), zone}
+	tz.Time = time.String()
+	tz.Zone = zone
 
-	return tz
+	return *tz
 }
