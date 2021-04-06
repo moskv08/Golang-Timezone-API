@@ -24,24 +24,25 @@ func GetTimeByZone(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 
 	if zone, ok := params["zone"]; ok {
-		tz := models.FindProperZone(zone)
+
+		tz := models.Timezone{Zone: zone}
 
 		if tz.Time != "" {
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
 
-			json.NewEncoder(w).Encode(tz)
+			json.NewEncoder(w).Encode(tz.FindProperZone(tz.Zone))
 		}
 	}
 }
 
 func GetMyTimeZone(w http.ResponseWriter, r *http.Request) {
-	tz := models.FindMyZone()
+	tz := models.Timezone{}
 
 	if tz.Time != "" {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 
-		json.NewEncoder(w).Encode(tz)
+		json.NewEncoder(w).Encode(tz.FindMyZone())
 	}
 }
