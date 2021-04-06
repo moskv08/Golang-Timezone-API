@@ -1,6 +1,7 @@
 package models
 
 import (
+	"strings"
 	"time"
 )
 
@@ -13,7 +14,7 @@ type Timezone struct {
 // Method
 func (tz *Timezone) FindProperZone(zone string) Timezone {
 
-	location, err := time.LoadLocation(zone)
+	location, err := time.LoadLocation(strings.ToUpper(zone))
 	if err != nil {
 		panic(err)
 	}
