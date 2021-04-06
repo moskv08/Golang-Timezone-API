@@ -1,33 +1,32 @@
 package models
 
 import (
-	"fmt"
 	"time"
 )
 
 type Timezone struct {
-	Zone string
 	Time string
+	Zone string
 }
 
-var location string
+// Method
+func FindProperZone(zone string) Timezone {
 
-func (tz *Timezone) GetTimeOfZone(location string) time.Time {
-	// Check for three char
-	if len(location) != 3 {
-		fmt.Println("Yo")
+	if len(zone) > 4 {
+		//return "", "Provide proper format"
 	}
 
-	loc, _ := time.LoadLocation(location)
+	loc, _ := time.LoadLocation(zone)
 	time := time.Now().In(loc)
 
-	return time
+	tz := Timezone{time.String(), loc.String()}
+
+	return tz
 }
 
-func GetMyTimeZone() (string, time.Time) {
+func (tz *Timezone) FindMyZone() (string, string) {
 	time := time.Now()
 	zone, _ := time.Zone()
 	// fmt.Println("ZONE : ", z, " Time : ", time) // local time
-
-	return zone, time
+	return time.String(), zone
 }
