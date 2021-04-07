@@ -1,14 +1,17 @@
 package models
 
 import (
+	"fmt"
+	"io/ioutil"
 	"strings"
 	"time"
 )
 
 type Timezone struct {
-	Time string
-	UTC  string
-	Zone string
+	Time   string
+	Offset int
+	UTC    string
+	Zone   string
 }
 
 // Method
@@ -19,21 +22,41 @@ func (tz *Timezone) FindProperZone(zone string) Timezone {
 		panic(err)
 	}
 
-	tz.UTC = time.Date(2018, 8, 30, 12, 0, 0, 0, time.UTC).String()
+	tz.UTC = time.Now().UTC().String()
 	tz.Time = time.Now().In(location).String()
-	tz.Zone = location.String()
+	tz.Zone, tz.Offset = time.Now().In(location).Zone()
 
-	// tz := Timezone{time.String(), timeInUTC.String(), location.String()}
 	return *tz
 }
 
 // Method
 func (tz *Timezone) FindMyZone() Timezone {
-	time := time.Now()
-	zone, _ := time.Zone()
 
+	time := time.Now()
+	tz.Zone, tz.Offset = time.Zone()
+	tz.UTC = time.UTC().String()
 	tz.Time = time.String()
-	tz.Zone = zone
 
 	return *tz
+}
+
+func (tz *Timezone) ListOfLocations() {
+
+	var zoneDir string = "/usr/share/zoneinfo/"
+	ReadFile(zoneDir)
+
+}
+
+func ReadFile(path string) {
+	files, _ := ioutil.ReadDir(path)
+	for _, f := range files {
+		if f.Name() != strings.ToUpper(f.Name()[:1])+f.Name()[1:] {
+			continue
+		}
+		if f.IsDir() {
+			ReadFile(path + "/" + f.Name())
+		} else {
+			fmt.Println((path + "/" + f.Name())[1:])
+		}
+	}
 }
