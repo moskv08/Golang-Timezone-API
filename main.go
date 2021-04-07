@@ -14,7 +14,8 @@ func main() {
 	// Init router
 	router := mux.NewRouter()
 	router.HandleFunc("/timezone/{zone}", GetTimeByZone).Methods(http.MethodGet)
-	router.HandleFunc("/mytimezone", GetMyTimeZone).Methods(http.MethodGet)
+	router.HandleFunc("/timezone", GetMyTimeZone).Methods(http.MethodGet)
+	router.HandleFunc("/timezones", GetAllTimeZones).Methods(http.MethodGet)
 
 	// Start webserver
 	log.Fatal(http.ListenAndServe(":3000", router))
@@ -49,4 +50,10 @@ func GetMyTimeZone(w http.ResponseWriter, r *http.Request) {
 
 		json.NewEncoder(w).Encode(result)
 	}
+}
+
+func GetAllTimeZones(w http.ResponseWriter, r *http.Request) {
+	// Init object
+	tz := models.Timezone{}
+	tz.ListOfLocations()
 }
