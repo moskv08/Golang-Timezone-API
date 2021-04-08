@@ -55,5 +55,10 @@ func GetMyTimeZone(w http.ResponseWriter, r *http.Request) {
 func GetAllTimeZones(w http.ResponseWriter, r *http.Request) {
 	// Init object
 	tz := models.Timezone{}
-	tz.ListOfLocations()
+	result := tz.ListOfLocations()
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	json.NewEncoder(w).Encode(result)
 }
